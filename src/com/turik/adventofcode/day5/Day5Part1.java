@@ -21,13 +21,13 @@ public class Day5Part1 {
         String numbers = cratesStrings.pop();
         int count = numbers.charAt(numbers.length() - 1) - '0'; // number of stacks
 
-        Deque[] crates = new Deque[count];
+        Deque<Character>[] crates = new Deque[count];
 
         while (!cratesStrings.isEmpty()) {
             String cratesString = cratesStrings.pop();
             for (int i = 0; i < count; i++) {
                 if (crates[i] == null) {
-                    crates[i] = new ArrayDeque<Character>();
+                    crates[i] = new ArrayDeque<>();
                 }
                 char supply = cratesString.charAt(1 + 4 * i);
                 if (supply != ' ') {
@@ -44,7 +44,7 @@ public class Day5Part1 {
         }
 
         StringBuilder sb = new StringBuilder();
-        for (Deque crate : crates) {
+        for (Deque<Character> crate : crates) {
             sb.append(crate.peek());
         }
         System.out.println(sb);
