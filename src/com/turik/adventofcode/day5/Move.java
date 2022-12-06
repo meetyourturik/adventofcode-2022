@@ -4,7 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class Move {
-    private static Pattern pattern = Pattern.compile("^move\\s(?<move>\\d+)\\sfrom\\s(?<from>\\d+)\\sto\\s(?<to>\\d+)$");
+    private static final Pattern pattern = Pattern.compile("^move\\s(?<move>\\d+)\\sfrom\\s(?<from>\\d+)\\sto\\s(?<to>\\d+)$");
 
     final int from;
     final int to;
