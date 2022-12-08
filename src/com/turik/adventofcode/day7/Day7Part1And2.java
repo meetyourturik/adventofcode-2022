@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.function.BiPredicate;
 import java.util.function.IntConsumer;
 
-public class Day7Part1 {
+public class Day7Part1And2 {
 
     private static int sum = 0;
 
