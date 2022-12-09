@@ -7,35 +7,39 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Day9Part2 {
+public class Day9Part1And2 {
 
-    private static Position[] chain;
+    private static void makeMove(Position[] chain, String way, Set<Position> positions) {
+        moveHead(chain[0] ,way);
+        for (int j = 1; j < chain.length; j++) {
+            chain[j] = moveLink(chain[j-1], chain[j]);
+        }
+        positions.add(chain[chain.length - 1]);
+    }
 
-    private static void moveHead(String way) {
+    private static void moveHead(Position position, String way) {
         switch (way) {
             case "L":
-                chain[0].decX();
+                position.decX();
                 break;
             case "R":
-                chain[0].incX();
+                position.incX();
                 break;
             case "U":
-                chain[0].incY();
+                position.incY();
                 break;
             case "D":
-                chain[0].decY();
+                position.decY();
                 break;
             default:
-                throw new RuntimeException("unknown way");
+                throw new RuntimeException("unknown way: " + way);
         }
     }
 
     private static Position moveLink(Position previous, Position current) {
         int directionX = 0;
         int directionY = 0;
-        if (Math.abs(previous.getX() - current.getX()) <= 1 && Math.abs(previous.getY() - current.getY()) <= 1) {
-            // no need to move
-        } else {
+        if (Math.abs(previous.getX() - current.getX()) > 1 || Math.abs(previous.getY() - current.getY()) > 1) {
             directionY = Integer.signum(previous.getY() - current.getY());
             directionX = Integer.signum(previous.getX() - current.getX());
         }
@@ -46,23 +50,25 @@ public class Day9Part2 {
         BufferedReader reader = new BufferedReader(new FileReader("./inputs/day9.txt"));
         String line;
 
-        Set<Position> positions = new HashSet<>();
+        Set<Position> positions1 = new HashSet<>();
+        Set<Position> positions2 = new HashSet<>();
 
-        chain = new Position[10]; // actually, works with anu arbitrary length
-        Arrays.fill(chain, new Position(0, 0));
+        Position[] chain1 = new Position[2];
+        Arrays.fill(chain1, new Position(0, 0));
+
+        Position[] chain2 = new Position[10];
+        Arrays.fill(chain2, new Position(0, 0));
 
         while ((line = reader.readLine()) != null) {
             String way = line.split(" ")[0];
             int count = Integer.parseInt(line.split(" ")[1]);
             for (int i = 0; i < count; i++) {
-                moveHead(way);
-                for (int j = 1; j < chain.length; j++) {
-                    chain[j] = moveLink(chain[j-1], chain[j]);
-                }
-                positions.add(chain[chain.length - 1]);
+                makeMove(chain1, way, positions1);
+                makeMove(chain2, way, positions2);
             }
         }
 
-        System.out.println(positions.size());
+        System.out.printf("part 1 answer: %d\n", positions1.size());
+        System.out.printf("part 2 answer: %d", positions2.size());
     }
 }
