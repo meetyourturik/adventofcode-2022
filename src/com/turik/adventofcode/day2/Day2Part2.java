@@ -32,7 +32,7 @@ public class Day2Part2 {
             return res;
         };
 
-        int result = Utils.processFile("./inputs/day2.txt", function);
+        int result = Utils.processFile("./inputs/day02.txt", function);
         System.out.println(result);
     }
 }
