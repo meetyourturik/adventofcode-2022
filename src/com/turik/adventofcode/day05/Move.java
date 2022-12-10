@@ -1,4 +1,4 @@
-package com.turik.adventofcode.day5;
+package com.turik.adventofcode.day05;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

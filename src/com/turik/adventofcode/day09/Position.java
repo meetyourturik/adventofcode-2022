@@ -1,4 +1,4 @@
-package com.turik.adventofcode.day9;
+package com.turik.adventofcode.day09;
 
 public class Position {
     private int x;

@@ -1,4 +1,4 @@
-package com.turik.adventofcode.day2;
+package com.turik.adventofcode.day02;
 
 enum RockPaperScissors {
     ROCK(1, 2, 3),

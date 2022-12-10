@@ -1,4 +1,4 @@
-package com.turik.adventofcode.day5;
+package com.turik.adventofcode.day05;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -9,7 +9,7 @@ import java.util.Deque;
 public class Day5Part2 {
 
     public static void main(String[] args) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader("./inputs/day5.txt"));
+        BufferedReader reader = new BufferedReader(new FileReader("./inputs/day05.txt"));
         String line;
 
         Deque<String> cratesStrings = new ArrayDeque<>();

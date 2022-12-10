@@ -1,4 +1,4 @@
-package com.turik.adventofcode.day3;
+package com.turik.adventofcode.day03;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -13,7 +13,7 @@ public class Day3Part2 {
     }
 
     public static void main(String[] args) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader("./inputs/day3.txt"));
+        BufferedReader reader = new BufferedReader(new FileReader("./inputs/day03.txt"));
 
         int res = 0;
 

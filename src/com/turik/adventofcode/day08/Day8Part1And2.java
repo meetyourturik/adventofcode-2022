@@ -1,4 +1,4 @@
-package com.turik.adventofcode.day8;
+package com.turik.adventofcode.day08;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -10,7 +10,7 @@ import java.util.List;
 public class Day8Part1And2 {
 
     public static void main(String[] args) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader("./inputs/day8.txt"));
+        BufferedReader reader = new BufferedReader(new FileReader("./inputs/day08.txt"));
         String line;
 
         List<String> rows = new ArrayList<>();

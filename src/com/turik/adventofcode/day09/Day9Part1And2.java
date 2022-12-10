@@ -1,4 +1,4 @@
-package com.turik.adventofcode.day9;
+package com.turik.adventofcode.day09;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -47,7 +47,7 @@ public class Day9Part1And2 {
     }
 
     public static void main(String[] args) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader("./inputs/day9.txt"));
+        BufferedReader reader = new BufferedReader(new FileReader("./inputs/day09.txt"));
         String line;
 
         Set<Position> positions1 = new HashSet<>();

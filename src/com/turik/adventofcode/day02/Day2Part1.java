@@ -1,4 +1,4 @@
-package com.turik.adventofcode.day2;
+package com.turik.adventofcode.day02;
 
 import com.turik.adventofcode.Utils;
 

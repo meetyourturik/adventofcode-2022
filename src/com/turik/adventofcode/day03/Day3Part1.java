@@ -1,4 +1,4 @@
-package com.turik.adventofcode.day3;
+package com.turik.adventofcode.day03;
 
 import com.turik.adventofcode.Utils;
 
@@ -27,7 +27,7 @@ public class Day3Part1 {
             throw new RuntimeException("there's supposed to be exactly one shared element");
         };
 
-        int result = Utils.processFile("./inputs/day3.txt", function);
+        int result = Utils.processFile("./inputs/day03.txt", function);
         System.out.println(result);
     }
 }

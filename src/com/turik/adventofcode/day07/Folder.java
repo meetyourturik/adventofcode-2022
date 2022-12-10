@@ -1,4 +1,4 @@
-package com.turik.adventofcode.day7;
+package com.turik.adventofcode.day07;
 
 import java.util.ArrayList;
 import java.util.List;

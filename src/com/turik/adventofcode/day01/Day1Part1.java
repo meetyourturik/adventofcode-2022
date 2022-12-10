@@ -1,4 +1,4 @@
-package com.turik.adventofcode.day1;
+package com.turik.adventofcode.day01;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

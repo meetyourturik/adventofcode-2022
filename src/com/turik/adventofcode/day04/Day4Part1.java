@@ -1,11 +1,11 @@
-package com.turik.adventofcode.day4;
+package com.turik.adventofcode.day04;
 
 import com.turik.adventofcode.Utils;
 
 import java.io.IOException;
 import java.util.function.ToIntFunction;
 
-public class Day4Part2 {
+public class Day4Part1 {
 
     public static void main(String[] args) throws IOException {
         ToIntFunction<String> function = (line) -> {
@@ -20,14 +20,14 @@ public class Day4Part2 {
             int elf2left = Integer.parseInt(elf2boundaries[0]);
             int elf2right = Integer.parseInt(elf2boundaries[1]);
 
-            if ((elf2left <= elf1right && elf2left >= elf1left) || (elf1left <= elf2right && elf1left >= elf2left)) {
+            if ((elf2left >= elf1left && elf2right <= elf1right) || (elf1left >= elf2left && elf1right <= elf2right)) {
                 return 1;
             }
 
             return 0;
         };
 
-        int result = Utils.processFile("./inputs/day4.txt", function);
+        int result = Utils.processFile("./inputs/day04.txt", function);
         System.out.println(result);
     }
 }

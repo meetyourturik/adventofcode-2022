@@ -1,12 +1,10 @@
-package com.turik.adventofcode.day6;
+package com.turik.adventofcode.day06;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public class Day6Part1And2 {
 
@@ -46,7 +44,7 @@ public class Day6Part1And2 {
 
 
     public static void main(String[] args) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader("./inputs/day6.txt"));
+        BufferedReader reader = new BufferedReader(new FileReader("./inputs/day06.txt"));
         String line = reader.readLine();
 
         System.out.printf("part 1 answer: %d\n", solveForMessageLength(line, 4));
