@@ -1,18 +1,18 @@
 package com.turik.adventofcode.day11;
 
 import java.util.List;
-import java.util.function.IntFunction;
+import java.util.function.LongFunction;
 
-public class Monkey1 {
+public class Monkey {
 
     private int inspectedCount;
-    private final List<Integer> items;
-    private final IntFunction<Integer> operation;
+    private final List<Long> items;
+    private final LongFunction<Long> operation;
     private final int test;
     private final int monkeyIfTrue;
     private final int monkeyIfFalse;
 
-    public Monkey1(List<Integer> items, IntFunction<Integer> operation, int test, int monkeyIfTrue, int monkeyIfFalse) {
+    public Monkey(List<Long> items, LongFunction<Long> operation, int test, int monkeyIfTrue, int monkeyIfFalse) {
         inspectedCount = 0;
         this.items = items;
         this.operation = operation;
@@ -21,18 +21,17 @@ public class Monkey1 {
         this.monkeyIfFalse = monkeyIfFalse;
     }
 
-    public int inspect(int itemPos) {
-        int item = items.get(itemPos);
+    public long inspect(int itemPos) {
+        long item = items.get(itemPos);
         item = operation.apply(item);
-        item /= 3;
         return item;
     }
 
-    public void throwTo(Monkey1 monkey, int item) {
+    public void throwTo(Monkey monkey, long item) {
         monkey.items.add(item);
     }
 
-    public int monkeyBusiness(int item) {
+    public int monkeyBusiness(long item) {
         return (item % test == 0) ? monkeyIfTrue : monkeyIfFalse;
     }
 
@@ -45,7 +44,7 @@ public class Monkey1 {
         return inspectedCount;
     }
 
-    public List<Integer> getItems() {
+    public List<Long> getItems() {
         return items;
     }
 }

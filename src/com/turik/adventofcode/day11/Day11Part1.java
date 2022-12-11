@@ -4,8 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
-import java.util.function.IntBinaryOperator;
-import java.util.function.IntFunction;
+import java.util.function.LongBinaryOperator;
+import java.util.function.LongFunction;
 
 public class Day11Part1 {
 
@@ -13,17 +13,20 @@ public class Day11Part1 {
         BufferedReader reader = new BufferedReader(new FileReader("./inputs/day11.txt"));
         String line;
 
-        IntBinaryOperator plus = (i1, i2) -> i1 + i2;
-        IntBinaryOperator minus = (i1, i2) -> i1 - i2;
-        IntBinaryOperator mult = (i1, i2) -> i1 * i2;
-        IntBinaryOperator div = (i1, i2) -> i1 / i2;
-        Map<String, IntBinaryOperator> operations = new HashMap<>();
+        LongBinaryOperator plus = (i1, i2) -> i1 + i2;
+        LongBinaryOperator minus = (i1, i2) -> i1 - i2;
+        LongBinaryOperator mult = (i1, i2) -> i1 * i2;
+        LongBinaryOperator div = (i1, i2) -> i1 / i2;
+        Map<String, LongBinaryOperator> operations = new HashMap<>();
         operations.put("+", plus);
         operations.put("-", minus);
         operations.put("*", mult);
         operations.put("/", div);
 
-        List<Monkey1> monkeys = new ArrayList<>();
+        List<Monkey> monkeys1 = new ArrayList<>();
+        List<Monkey> monkeys2 = new ArrayList<>();
+
+        int magicNumber = 1;
 
         while (true) {
             line = reader.readLine();
@@ -39,59 +42,83 @@ public class Day11Part1 {
             String[] ifFalseStr = reader.readLine().trim().split(" ");
             reader.readLine(); // empty line
 
-            List<Integer> items = new ArrayList<>();
+            List<Long> items = new ArrayList<>();
 
             for (String s : itemsStr) {
-                items.add(Integer.parseInt(s.trim()));
+                items.add(Long.parseLong(s.trim()));
             }
 
             final String first = operationsStr[3];
             final String op = operationsStr[4];
             final String second = operationsStr[5];
 
-            IntFunction<Integer> operation = (item) -> {
-                IntBinaryOperator operator = operations.get(op);
+            LongFunction<Long> operation = (item) -> {
+                LongBinaryOperator operator = operations.get(op);
                 if (first.equals("old") && second.equals("old")) {
-                    return operator.applyAsInt(item, item);
+                    return operator.applyAsLong(item, item);
                 } else if (first.equals("old")) {
-                    int i2 = Integer.parseInt(second);
-                    return operator.applyAsInt(item, i2);
+                    long i2 = Long.parseLong(second);
+                    return operator.applyAsLong(item, i2);
                 } else if (second.equals("old")) {
-                    int i1 = Integer.parseInt(first);
-                    return operator.applyAsInt(i1, item);
+                    long i1 = Long.parseLong(first);
+                    return operator.applyAsLong(i1, item);
                 } else { // for some reason both are integers
-                    int i1 = Integer.parseInt(first);
-                    int i2 = Integer.parseInt(second);
-                    return operator.applyAsInt(i1, i2);
+                    long i1 = Long.parseLong(first);
+                    long i2 = Long.parseLong(second);
+                    return operator.applyAsLong(i1, i2);
                 }
             };
 
             int test = Integer.parseInt(testStr[3]);
+            magicNumber *= test;
             int monkeyIfTrue = Integer.parseInt(ifTrueStr[5]);
             int monkeyIfFalse = Integer.parseInt(ifFalseStr[5]);
-            Monkey1 monkey = new Monkey1(items, operation, test, monkeyIfTrue, monkeyIfFalse);
-            monkeys.add(monkey);
+            Monkey monkey1 = new Monkey(items, operation, test, monkeyIfTrue, monkeyIfFalse);
+            monkeys1.add(monkey1);
+            Monkey monkey2 = new Monkey(new ArrayList<>(items), operation, test, monkeyIfTrue, monkeyIfFalse);
+            monkeys2.add(monkey2);
         }
 
+        // part 1
         for (int i = 1; i <= 20; i++) {
-            for (Monkey1 monkey: monkeys) {
-                List<Integer> items = monkey.getItems();
+            for (Monkey monkey: monkeys1) {
+                List<Long> items = monkey.getItems();
                 for (int j = 0; j < items.size(); j++) {
-                    int newItem = monkey.inspect(j);
+                    long newItem = monkey.inspect(j);
+                    newItem /= 3; // relief
                     int newMonkey = monkey.monkeyBusiness(newItem);
-                    monkey.throwTo(monkeys.get(newMonkey), newItem);
+                    monkey.throwTo(monkeys1.get(newMonkey), newItem);
                 }
                 monkey.removeAll();
             }
         }
-        int[] counts = new int[monkeys.size()];
 
-        for (int i = 0; i < monkeys.size(); i++) {
-            counts[i] = monkeys.get(i).getInspectedCount();
+        // part 2
+        for (int i = 1; i <= 10_000; i++) {
+            for (Monkey monkey: monkeys2) {
+                List<Long> items = monkey.getItems();
+                for (int j = 0; j < items.size(); j++) {
+                    long newItem = monkey.inspect(j);
+                    newItem %= magicNumber; // relief
+                    int newMonkey = monkey.monkeyBusiness(newItem);
+                    monkey.throwTo(monkeys2.get(newMonkey), newItem);
+                }
+                monkey.removeAll();
+            }
         }
 
-        Arrays.sort(counts);
+        long[] counts1 = new long[monkeys1.size()];
+        long[] counts2 = new long[monkeys2.size()];
 
-        System.out.println((long) counts[counts.length - 2] * counts[counts.length - 1]);
+        for (int i = 0; i < monkeys1.size(); i++) {
+            counts1[i] = monkeys1.get(i).getInspectedCount();
+            counts2[i] = monkeys2.get(i).getInspectedCount();
+        }
+
+        Arrays.sort(counts1);
+        Arrays.sort(counts2);
+
+        System.out.printf("part 1 answer: %d\n", counts1[counts1.length - 2] * counts1[counts1.length - 1]);
+        System.out.printf("part 2 answer: %d", counts2[counts2.length - 2] * counts2[counts2.length - 1]);
     }
 }
