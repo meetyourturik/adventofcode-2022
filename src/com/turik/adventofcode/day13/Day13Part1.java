@@ -65,13 +65,13 @@ public class Day13Part1 {
         }
     }
 
-    // 1 means right order, -1 - wrong
+    // 1 means right order, -1 - wrong, 0 - continue search
     static int compareObjects(Object left, Object right) { // Object is either int or List<Integer>
         if (left instanceof Integer && right instanceof Integer) {
             if ((int) left == (int) right) {
                 return 0;
             }
-            return (int) left < (int) right ? 1 : -1;
+            return Integer.signum((int) right - (int) left);
         } else if (left instanceof List && right instanceof Integer) {
             List<Object> tmpRight = new ArrayList<>();
             tmpRight.add(right);
@@ -93,11 +93,7 @@ public class Day13Part1 {
                 }
             }
 
-            if (leftList.size() == rightList.size()) {
-                return 1;
-            }
-
-            return minSize == leftList.size() ? 1 : -1;
+            return Integer.signum(rightList.size() - leftList.size());
         } else {
             throw  new RuntimeException("should've processed all cases above");
         }
