@@ -6,10 +6,19 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
-public class Day13Part1 {
+public class Day13Part1And2 {
 
+    static List<List<Object>> packets2 = new LinkedList<>();
     static char open = '[';
     static char close = ']';
+
+    static void addPacket(List<Object> packet) {
+        int i = 0;
+        while (i < packets2.size() && compareObjects(packet, packets2.get(i)) == -1) {
+            i++;
+        }
+        packets2.add(i, packet);
+    }
 
     static int getCorrespondingClosedBracket(String line, int openPos) {
         Deque<Integer> stack = new ArrayDeque<>();
@@ -112,23 +121,45 @@ public class Day13Part1 {
             String s2 = reader.readLine();
             reader.readLine(); // empty line
 
-            Pair<List<Object>> pair = new Pair<>(
-                    getPacketFromString(s1.substring(s1.indexOf(open) + 1, s1.lastIndexOf(close))),
-                    getPacketFromString(s2.substring(s2.indexOf(open) + 1, s2.lastIndexOf(close)))
-            );
+            List<Object> l1 = getPacketFromString(s1.substring(s1.indexOf(open) + 1, s1.lastIndexOf(close)));
+            List<Object> l2 = getPacketFromString(s2.substring(s2.indexOf(open) + 1, s2.lastIndexOf(close)));
 
+            // part 1
+            Pair<List<Object>> pair = new Pair<>(l1, l2);
             packets.add(pair);
-        }
 
-        int res = 0;
+            // part 2
+            addPacket(l1);
+            addPacket(l2);
+        }
+        // part 1
+        int res1 = 0;
+
+        // part 2
+        List<Object> d1 = getPacketFromString("[2]");
+        List<Object> d2 = getPacketFromString("[6]");
+        addPacket(d1);
+        addPacket(d2);
+        int res2 = 1;
 
         for (int i = 0; i < packets.size(); i++) {
             int comparison = compareObjects(packets.get(i).left(), packets.get(i).right());
             if (comparison == 1) {
-                res += i+1;
+                res1 += i+1;
             }
         }
 
-        System.out.println(res);
+        for (int i = 0; i < packets2.size(); i++) {
+            List<Object> packet = packets2.get(i);
+            if (packet.equals(d1)) {
+                res2 *= (i+1);
+            } else if (packet.equals(d2)) {
+                res2 *= (i+1);
+                break;
+            }
+        }
+
+        System.out.printf("part 1 answer: %d\n", res1);
+        System.out.printf("part 2 answer: %d", res2);
     }
 }
