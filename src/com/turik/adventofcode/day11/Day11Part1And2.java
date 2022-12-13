@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.function.LongBinaryOperator;
 import java.util.function.LongFunction;
 
-public class Day11Part1 {
+public class Day11Part1And2 {
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader("./inputs/day11.txt"));
