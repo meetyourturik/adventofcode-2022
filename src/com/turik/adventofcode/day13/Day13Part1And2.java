@@ -1,6 +1,5 @@
 package com.turik.adventofcode.day13;
 
-import javax.script.ScriptException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -108,7 +107,7 @@ public class Day13Part1And2 {
         }
     }
 
-    public static void main(String[] args) throws IOException, ScriptException {
+    public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader("./inputs/day13.txt"));
 
         List<Pair<List<Object>>> packets = new ArrayList<>();
