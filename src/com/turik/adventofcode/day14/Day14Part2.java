@@ -5,9 +5,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
-public class Day14Part1 {
+public class Day14Part2 {
 
     static Map<Integer, Set<Integer>> cave = new HashMap<>();
+    static int lowestWall = 0;
 
     static void addPoint(int x, int y) {
         Set<Integer> vert = cave.computeIfAbsent(x, key -> new TreeSet<>(Comparator.naturalOrder()));
@@ -33,13 +34,17 @@ public class Day14Part1 {
                 return false;
             }
             int peak = getLocalPeak(x, y);
-            if (peak == -1) { // falling in the abyss
-                return false;
+            if (peak == -1) { // falling to the bottom
+                addPoint(x, lowestWall);
+                addPoint(x, lowestWall - 1);
+                return true;
             }
             // check left
             Set<Integer> leftVert = cave.get(x - 1);
             if (leftVert == null) { // there's abyss on the left
-                return false;
+                addPoint(x-1 , lowestWall);
+                addPoint(x-1 , lowestWall - 1);
+                return true;
             }
             if (!leftVert.contains(peak)) { // if true, then we can't fall on the left
                 x -= 1;
@@ -49,14 +54,19 @@ public class Day14Part1 {
             // check right
             Set<Integer> rightVert = cave.get(x + 1);
             if (rightVert == null) { // there's abyss on the right
-                return false;
+                addPoint(x+1 , lowestWall);
+                addPoint(x+1 , lowestWall - 1);
+                return true;
             }
             if (!rightVert.contains(peak)) { // if true, then we can't fall on the right
                 x += 1;
                 y = peak;
                 continue;
             }
-            // if we are here, then we fell to stop
+            // we are at the starting point and it's filled
+            if (x == 500 && y == 0 && cave.get(500).contains(0)) {
+                return false;
+            }
             addPoint(x, peak - 1);
             return true;
         }
@@ -72,9 +82,13 @@ public class Day14Part1 {
             int prevX = Integer.parseInt(allCoords[0].split(",")[0]);
             int prevY = Integer.parseInt(allCoords[0].split(",")[1]);
 
+            lowestWall = Math.max(lowestWall, prevY);
+
             for (int i = 1; i < allCoords.length; i++) {
                 int x = Integer.parseInt(allCoords[i].split(",")[0]);
                 int y = Integer.parseInt(allCoords[i].split(",")[1]);
+
+                lowestWall = Math.max(lowestWall, y);
 
                 if (prevX == x) {
                     for (int j = Math.min(prevY, y); j <= Math.max(prevY, y); j++) {
@@ -93,8 +107,10 @@ public class Day14Part1 {
             }
         }
 
-        int res = 0;
+        lowestWall += 2;
 
+        int res = 0;
+        
         while (true) {
             if (!dropSand()) {
                 break;
@@ -104,6 +120,7 @@ public class Day14Part1 {
                 break;
             }
         }
+
 
         System.out.println(res);
     }
