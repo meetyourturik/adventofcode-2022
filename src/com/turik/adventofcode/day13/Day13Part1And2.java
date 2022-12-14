@@ -76,25 +76,16 @@ public class Day13Part1And2 {
     // 1 means right order, -1 - wrong, 0 - continue search
     static int compareObjects(Object left, Object right) { // Object is either int or List<Integer>
         if (left instanceof Integer && right instanceof Integer) {
-            if ((int) left == (int) right) {
-                return 0;
-            }
             return Integer.signum((int) right - (int) left);
         } else if (left instanceof List && right instanceof Integer) {
-            List<Object> tmpRight = new ArrayList<>();
-            tmpRight.add(right);
-            return compareObjects(left, tmpRight);
+            return compareObjects(left, List.of(right));
         } else if (left instanceof Integer && right instanceof List) {
-            List<Object> tmpLeft = new ArrayList<>();
-            tmpLeft.add(left);
-            return compareObjects(tmpLeft, right);
+            return compareObjects(List.of(left), right);
         } else if (left instanceof List && right instanceof List){ // both are lists
             List<Object> leftList = (List<Object>) left;
             List<Object> rightList = (List<Object>) right;
 
-            int minSize = Math.min(leftList.size(), rightList.size());
-
-            for (int i = 0; i < minSize; i++) {
+            for (int i = 0; i < Math.min(leftList.size(), rightList.size()); i++) {
                 int compare = compareObjects(leftList.get(i), rightList.get(i));
                 if (compare != 0) {
                     return compare;
@@ -124,8 +115,7 @@ public class Day13Part1And2 {
             List<Object> l2 = getPacketFromString(s2.substring(s2.indexOf(open) + 1, s2.lastIndexOf(close)));
 
             // part 1
-            Pair<List<Object>> pair = new Pair<>(l1, l2);
-            packets.add(pair);
+            packets.add(new Pair<>(l1, l2));
 
             // part 2
             addPacket(l1);
