@@ -10,7 +10,6 @@ import java.util.regex.Pattern;
 public class Day15Part1 {
 
     static Pattern pattern = Pattern.compile("Sensor at x=(?<sensorx>-?\\d+), y=(?<sensory>-?\\d+): closest beacon is at x=(?<beaconx>-?\\d+), y=(?<beacony>-?\\d+)");
-    //static Map<Integer, Set<Integer>> network = new HashMap<>();
     static List<Point> sensors = new ArrayList<>();
 
     static void getCoordsFromLine(String line) {
@@ -26,12 +25,6 @@ public class Day15Part1 {
             Point sensor = new Point(sensorx, sensory, beacon);
 
             sensors.add(sensor);
-
-            //Set<Integer> sensorRow = network.computeIfAbsent(sensory, key -> new TreeSet<>(Comparator.naturalOrder()));
-            //sensorRow.add(sensorx);
-
-            //Set<Integer> beaconRow = network.computeIfAbsent(beacony, key -> new TreeSet<>(Comparator.naturalOrder()));
-            //beaconRow.add(beaconx);
         } else {
             throw new RuntimeException("move strings should be unified");
         }
