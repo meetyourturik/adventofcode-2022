@@ -29,6 +29,9 @@ public class Day14Part2 {
         int y = 0;
 
         while (true) {
+            if (cave.get(500).contains(0)) { // cave is filled to the top
+                return false;
+            }
             Set<Integer> vert = cave.get(x);
             if (vert == null) {
                 return false;
@@ -64,9 +67,6 @@ public class Day14Part2 {
                 continue;
             }
             // we are at the starting point and it's filled
-            if (x == 500 && y == 0 && cave.get(500).contains(0)) {
-                return false;
-            }
             addPoint(x, peak - 1);
             return true;
         }
