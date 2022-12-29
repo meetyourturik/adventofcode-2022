@@ -1,15 +1,15 @@
 package com.turik.adventofcode.day18;
 
-public class Droplet {
+public class Droplet2 {
     final int x;
     final int y;
     final int z;
-    int neighbours;
+    int[] neighbours;
 
-    public Droplet(int x, int y, int z) {
+    public Droplet2(int x, int y, int z) {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.neighbours = 0;
+        this.neighbours = new int[6];
     }
 }
