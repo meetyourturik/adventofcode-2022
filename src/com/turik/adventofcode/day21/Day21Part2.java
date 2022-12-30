@@ -5,23 +5,17 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.LongBinaryOperator;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class Day21Part2 {
 
     static Pattern numberPattern = Pattern.compile("\\d+");
 
-    static LongBinaryOperator plus = (i1, i2) -> (i1 + i2);
-    static LongBinaryOperator minus = (i1, i2) -> (i1 - i2);
-    static LongBinaryOperator mult = (i1, i2) -> (i1 * i2);
-    static LongBinaryOperator div = (i1, i2) -> (i1 / i2);
-
-
     public static void main(String[] args) throws IOException {
 
-        Map<String, Long> numbers = new HashMap<>();
-        Map<String, Operation> operations = new HashMap<>();
+        Map<String, Long> numbersOrig = new HashMap<>();
+        Map<String, Operation> operationsOrig = new HashMap<>();
 
         BufferedReader reader = new BufferedReader(new FileReader("./inputs/day21.txt"));
         String line;
@@ -35,31 +29,50 @@ public class Day21Part2 {
             }
 
             if (numberPattern.matcher(split[1]).matches()) {
-                numbers.put(name, Long.parseLong(split[1]));
+                numbersOrig.put(name, Long.parseLong(split[1]));
             } else {
                 String[] split2 = split[1].split(" ");
                 Operation operation = new Operation(split2[0], split2[2], split2[1]);
-                operations.put(name, operation);
+                operationsOrig.put(name, operation);
             }
         }
 
-        while (!operations.isEmpty()) {
-            String toremove = null;
-            for (Map.Entry<String, Operation> entry : operations.entrySet()) {
-                String name = entry.getKey();
-                Operation operation = entry.getValue();
-                if (numbers.containsKey(operation.monkey1) && numbers.containsKey(operation.monkey2)) {
-                    long value = operation.operator.applyAsLong(numbers.get(operation.monkey1), numbers.get(operation.monkey2));
-                    toremove = name;
-                    numbers.put(name, value);
-                    break;
+        /**
+         * again, found number from which to start more or less manually :shrug:
+         */
+
+        for (long i = 3_759_566_892_000L; i < Long.MAX_VALUE; i++) {
+
+            Map<String, Long> numbers = new HashMap<>(numbersOrig);
+            Map<String, Operation> operations = new HashMap<>(operationsOrig);
+            numbers.put("humn", i);
+
+            String r1 = operations.get("root").monkey1;
+            String r2 = operations.get("root").monkey2;
+
+            while (!(numbers.containsKey(r1) && numbers.containsKey(r2))) {
+                String toremove = null;
+                for (Map.Entry<String, Operation> entry : operations.entrySet()) {
+                    String name = entry.getKey();
+                    Operation operation = entry.getValue();
+                    if (numbers.containsKey(operation.monkey1) && numbers.containsKey(operation.monkey2)) {
+                        long value = operation.operator.applyAsLong(numbers.get(operation.monkey1), numbers.get(operation.monkey2));
+                        toremove = name;
+                        numbers.put(name, value);
+                        break;
+                    }
+                }
+                if (toremove != null) {
+                    operations.remove(toremove);
                 }
             }
-            if (toremove != null) {
-                operations.remove(toremove);
+
+            // System.out.println(i + ": " + numbers.get(r1) + " " + numbers.get(r2));
+
+            if (Objects.equals(numbers.get(r1), numbers.get(r2))) {
+                System.out.println("found: " + i);
+                break;
             }
         }
-
-        System.out.println(numbers.get("root"));
     }
 }
