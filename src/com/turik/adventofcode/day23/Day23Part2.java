@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public class Day23Part1 {
+public class Day23Part2 {
 
     static List<Point> elfs = new ArrayList<>();
 
@@ -97,41 +97,6 @@ public class Day23Part1 {
         }
     }
 
-    // minx = [0] maxx = [1] miny = [2] maxy = [3]
-    static int[] getBoundaries() {
-        int minx = elfs.get(0).x;
-        int maxx = elfs.get(0).x;
-        int miny = elfs.get(0).y;
-        int maxy = elfs.get(0).y;
-
-        for (Point elf : elfs) {
-            minx = Math.min(minx, elf.x);
-            maxx = Math.max(maxx, elf.x);
-            miny = Math.min(miny, elf.y);
-            maxy = Math.max(maxy, elf.y);
-        }
-        return new int[] {minx, maxx, miny, maxy};
-    }
-
-    // for debug
-    static void draw() {
-        int[] boundaries = getBoundaries();
-        for (int y = boundaries[3]; y >= boundaries[2]; y--) {
-            StringBuilder sb = new StringBuilder();
-            for (int x = boundaries[0]; x <= boundaries[1]; x++) {
-                boolean isElf = false;
-                for (Point elf : elfs) {
-                    if (elf.x == x && elf.y == y) {
-                        isElf = true;
-                        break;
-                    }
-                }
-                sb.append(isElf ? '#' : '.');
-            }
-            System.out.println(sb);
-        }
-    }
-
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader("./inputs/day23.txt"));
         String line;
@@ -149,7 +114,7 @@ public class Day23Part1 {
 
         Map<Point, List<Point>> potentialMoves = new HashMap<>();
         int round = 0;
-        while (round < 10) {
+        while (!allStopped()) {
             // phase 1
             for (Point elf : elfs) {
                 if (freeAll.test(elf)) {
@@ -183,7 +148,6 @@ public class Day23Part1 {
             round++;
         }
 
-        int[] boundaries = getBoundaries();
-        System.out.println((boundaries[1] - boundaries[0] + 1)*(boundaries[3] - boundaries[2] + 1) - elfs.size());
+        System.out.println(round + 1);
     }
 }
