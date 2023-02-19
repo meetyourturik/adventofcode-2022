@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Day16Part1 {
+public class Day16Part2 {
 
     static Pattern pattern = Pattern.compile("Valve (?<valveName>\\w+) has flow rate=(?<flowRate>\\d+); tunnels? leads? to valves? (?<paths>.+)");
 
@@ -15,7 +15,7 @@ public class Day16Part1 {
     static List<String> namesList = new ArrayList<>();
     static List<String> positiveNamesList = new ArrayList<>();
     static Map<String, Map<String, Integer>> dist = new HashMap<>();
-    static Map<Position, Integer> cache = new HashMap<>();
+    static Map<DoublePosition, Integer> cache = new HashMap<>();
 
     static void calcDist() {
         for (Map.Entry<String, Valve> entry: valves.entrySet()) {
@@ -63,24 +63,35 @@ public class Day16Part1 {
         }
     }
 
-    static int dfs(Position position) {
+    static int dfs(DoublePosition position) {
         if (cache.containsKey(position)) {
             return cache.get(position);
         }
         int maxval = 0;
 
-        for (String neighName : dist.get(position.getValve()).keySet()) {
-            int bit = 1 << namesList.indexOf(neighName);
+        for (String neigh1 : dist.get(position.getValve1()).keySet()) {
+            int bit1 = 1 << namesList.indexOf(neigh1);
 
-            if ((position.getBitmask() & bit) != 0) {
+            if ((position.getBitmask() & bit1) != 0) {
                 continue;
             }
-
-            int remtime = position.getTime() - dist.get(position.getValve()).get(neighName) - 1;
-            if (remtime <= 0) {
+            int remtime1 = position.getRem1() - dist.get(position.getValve1()).get(neigh1) - 1;
+            if (remtime1 <= 0) {
                 continue;
             }
-            maxval = Math.max(maxval, dfs( new Position(remtime, neighName, position.getBitmask() | bit)) + valves.get(neighName).flow() * remtime);
+            for (String neigh2 : dist.get(position.getValve2()).keySet()) {
+                int bit2 = 1 << namesList.indexOf(neigh2);
+
+                if ((position.getBitmask() & bit2) != 0 || bit1 == bit2) {
+                    continue;
+                }
+
+                int remtime2 = position.getRem2() - dist.get(position.getValve2()).get(neigh2) - 1;
+                if (remtime2 <= 0) {
+                    continue;
+                }
+                maxval = Math.max(maxval, dfs(new DoublePosition(neigh1, neigh2, remtime1, remtime2, position.getBitmask() | bit1 | bit2)) + valves.get(neigh1).flow() * remtime1 + valves.get(neigh2).flow() * remtime2);
+            }
         }
 
         cache.put(position, maxval);
@@ -109,6 +120,6 @@ public class Day16Part1 {
         }
 
         calcDist();
-        System.out.println(dfs(new Position(30, "AA", 0)));
+        System.out.println(dfs(new DoublePosition( "AA","AA",26, 26, 0)));
     }
 }
