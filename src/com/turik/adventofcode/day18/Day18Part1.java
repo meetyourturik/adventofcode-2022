@@ -33,7 +33,7 @@ public class Day18Part1 {
         for (Droplet droplet : droplets) {
             res += droplet.neighbours;
         }
-        // dividing by 2 because above we calculate each neigbour twice
+        // dividing by 2 because above we calculate each neighbour twice
         System.out.println(droplets.size() * 6 - res / 2);
     }
 }

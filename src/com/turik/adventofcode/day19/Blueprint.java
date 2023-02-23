@@ -7,6 +7,8 @@ public class Blueprint {
 
     static Pattern pattern = Pattern.compile("Blueprint (?<number>-?\\d+): Each ore robot costs (?<oreore>-?\\d+) ore. Each clay robot costs (?<clayore>-?\\d+) ore. Each obsidian robot costs (?<obsore>-?\\d+) ore and (?<obsclay>-?\\d+) clay. Each geode robot costs (?<geodeore>-?\\d+) ore and (?<geodeobs>-?\\d+) obsidian\\.");
 
+    final int number;
+
     final int oreore;
 
     final int clayore;
@@ -20,6 +22,8 @@ public class Blueprint {
     public Blueprint(String line) {
         Matcher matcher = pattern.matcher(line);
         if (matcher.find()) {
+            this.number = Integer.parseInt(matcher.group("number"));
+
             this.oreore = Integer.parseInt(matcher.group("oreore"));
 
             this.clayore = Integer.parseInt(matcher.group("clayore"));

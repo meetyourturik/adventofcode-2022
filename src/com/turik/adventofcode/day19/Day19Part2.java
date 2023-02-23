@@ -5,9 +5,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
-public class Day19Part1 {
+public class Day19Part2 {
 
-    static Map<Position, Integer> cache;
+    static Map<Position, Integer> cache = new HashMap<>();
 
     static int search(Position position, Blueprint bp) {
         if (cache.containsKey(position)) {
@@ -52,16 +52,22 @@ public class Day19Part1 {
             nextPos = new Position(resources, robots, time, 2);
             maxval = Math.max(maxval, search(nextPos, bp));
         } else {
-            if (robots[0] <= 10 && resources[0] >= bp.oreore) { // building an ore robot
+            boolean built = false;
+            if (robots[0] <= 20 && resources[0] >= bp.oreore) { // building an ore robot
                 nextPos = new Position(resources, robots, time, 0);
                 maxval = Math.max(maxval, search(nextPos, bp));
+                built = true;
             }
-            if (robots[1] <= 10 && resources[0] >= bp.clayore) { // building a clay robot
+            if (robots[1] <= 20 && resources[0] >= bp.clayore) { // building a clay robot
                 nextPos = new Position(resources, robots, time, 1);
                 maxval = Math.max(maxval, search(nextPos, bp));
+                built = true;
             }
-            nextPos = new Position(resources, robots, time, -1);
-            maxval = Math.max(maxval, search(nextPos,bp));
+            int skipped = position.skipped;
+            if (!built || skipped < 3) { // not skipping more than 3 turns, also skipping only if couldn't build anything
+                nextPos = new Position(resources, robots, time, -1, skipped + 1);
+                maxval = Math.max(maxval, search(nextPos, bp));
+            }
         }
 
         cache.put(position, maxval);
@@ -70,26 +76,27 @@ public class Day19Part1 {
     }
 
     public static void main(String[] args) throws IOException {
+        int c = 0;
         BufferedReader reader = new BufferedReader(new FileReader("./inputs/day19.txt"));
         String line;
 
         List<Blueprint> blueprints = new ArrayList<>();
 
-        while ((line = reader.readLine()) != null) {
+        while ((line = reader.readLine()) != null && c++ < 3) {
             blueprints.add(new Blueprint(line));
         }
 
-        int res = 0;
+        int res = 1;
 
         for (Blueprint bp : blueprints) {
             // 0 - ore 1 - clay 2 - obsidian 3 - geode
             int[] resources = new int[4];
             int[] robots = new int[4];
-            cache = new HashMap<>();
+            cache.clear();
 
             robots[0] = 1;
-            int geodes = search(new Position(resources, robots, 24, -1), bp);
-            res += bp.number * geodes;
+            int geodes = search(new Position(resources, robots, 32, -1), bp);
+            res *= geodes;
         }
 
         System.out.println(res);
