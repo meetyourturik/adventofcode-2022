@@ -5,7 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
-public class Day24Part1 {
+public class Day24Part2 {
 
     static final int MOVES_LIMIT = 500;
 
@@ -122,7 +122,7 @@ public class Day24Part1 {
         return nextField;
     }
 
-    static int move(int moves, int[][] field, int curx, int cury) {
+    static int moveSF(int moves, int[][] field, int curx, int cury) {
         if (curx == END_X && cury == END_Y) {
             return moves;
         }
@@ -142,19 +142,57 @@ public class Day24Part1 {
         int res = 99_999_999;
 
         if (nextField[cury][curx + 1] == EMPTY) {
-            res = Math.min(res, move(moves, nextField, curx + 1, cury));
+            res = Math.min(res, moveSF(moves, nextField, curx + 1, cury));
         }
         if (nextField[cury][curx - 1] == EMPTY) {
-            res = Math.min(res, move(moves, nextField, curx - 1, cury));
+            res = Math.min(res, moveSF(moves, nextField, curx - 1, cury));
         }
-        if (nextField[cury + 1][curx] == EMPTY) {
-            res = Math.min(res, move(moves, nextField, curx, cury + 1));
+        if (cury < height-1 && nextField[cury + 1][curx] == EMPTY) {
+            res = Math.min(res, moveSF(moves, nextField, curx, cury + 1));
         }
         if (cury > 0 && nextField[cury - 1][curx] == EMPTY) {
-            res = Math.min(res, move(moves, nextField, curx, cury - 1));
+            res = Math.min(res, moveSF(moves, nextField, curx, cury - 1));
         }
         if (nextField[cury][curx] == EMPTY) {
-            res = Math.min(res, move(moves, nextField, curx, cury));
+            res = Math.min(res, moveSF(moves, nextField, curx, cury));
+        }
+
+        return res;
+    }
+
+    static int moveFS(int moves, int[][] field, int curx, int cury) {
+        if (curx == START_X && cury == START_Y) {
+            return moves;
+        }
+        if (moves >= MOVES_LIMIT) {
+            return MOVES_LIMIT;
+        }
+        String pos = curx + ":" + cury;
+        String fieldHash = hashcode(field);
+        List<String> visitedForPos = visited.computeIfAbsent(pos, s -> new ArrayList<>());
+        if (visitedForPos.contains(fieldHash)) {
+            return MOVES_LIMIT;
+        }
+        visitedForPos.add(fieldHash);
+        moves++;
+        int[][] nextField = getNextField(field);
+
+        int res = 99_999_999;
+
+        if (nextField[cury][curx] == EMPTY) {
+            res = Math.min(res, moveFS(moves, nextField, curx, cury));
+        }
+        if (nextField[cury][curx + 1] == EMPTY) {
+            res = Math.min(res, moveFS(moves, nextField, curx + 1, cury));
+        }
+        if (nextField[cury][curx - 1] == EMPTY) {
+            res = Math.min(res, moveFS(moves, nextField, curx - 1, cury));
+        }
+        if (cury < height-1 && nextField[cury + 1][curx] == EMPTY) {
+            res = Math.min(res, moveFS(moves, nextField, curx, cury + 1));
+        }
+        if (cury > 0 && nextField[cury - 1][curx] == EMPTY) {
+            res = Math.min(res, moveFS(moves, nextField, curx, cury - 1));
         }
 
         return res;
@@ -182,8 +220,24 @@ public class Day24Part1 {
                 field[i][j] = getIntFromChar(lines.get(i).charAt(j));
             }
         }
+        int res = 0;
 
-        int res = move(0, field, START_X, START_Y);
+        int trip1 = moveSF(0, field, START_X, START_Y);
+        res += trip1;
+
+        visited.clear();
+        for (int i = 0; i < trip1; i++) {
+            field = getNextField(field);
+        }
+        int trip2 = moveFS(0, field, END_X, END_Y);
+        res += trip2;
+
+        visited.clear();
+        for (int i = 0; i < trip2; i++) {
+            field = getNextField(field);
+        }
+        int trip3 = moveSF(0, field, START_X, START_Y);
+        res += trip3;
 
         System.out.println(res);
     }
