@@ -12,4 +12,24 @@ public class Droplet {
         this.z = z;
         this.neighbours = 0;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Droplet droplet = (Droplet) o;
+
+        if (x != droplet.x) return false;
+        if (y != droplet.y) return false;
+        return z == droplet.z;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = x;
+        result = 31 * result + y;
+        result = 31 * result + z;
+        return result;
+    }
 }
